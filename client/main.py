@@ -17,7 +17,7 @@ def read_config():
 
 
 def publish(client, topic, timestamp, temp, hum):
-    struct.pack_into("IBB", msg_buffer, 0, timestamp, temp, hum)
+    struct.pack_into("!IBB", msg_buffer, 0, timestamp, temp, hum)
     client.publish(topic, msg_buffer)
 
 
@@ -33,10 +33,11 @@ def main():
 
     while True:
         timestamp, temp, hum = sensor.measure(dht)
+        print("time:", timestamp)
         print("temp:", temp)
         print("hum:", hum)
         publish(mqtt_client, config["topic"], timestamp, temp, hum)
-        sleep(60)
+        sleep(20)
 
 
 if __name__ == "__main__":

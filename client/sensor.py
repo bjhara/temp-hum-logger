@@ -16,8 +16,11 @@ def create(model, pin):
 
 
 def measure(sensor):
-    timestamp = time()
+    # micropython/python epoch diff 1970/2000
+    # make it into a regular unix timestamp
+    epoch_diff = const(946684800)
+    timestamp = time() + epoch_diff
     sensor.measure()
     temp = sensor.temperature()
     humidity = sensor.humidity()
-    return (timestamp, int(temp), int(humidity))
+    return (int(timestamp), int(temp), int(humidity))
