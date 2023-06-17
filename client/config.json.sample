@@ -1,0 +1,4 @@
+{
+    "model": "dht11",
+    "dhtPin": 16
+}
