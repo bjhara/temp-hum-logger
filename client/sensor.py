@@ -14,4 +14,4 @@ def measure(sensor):
     sensor.measure()
     temp = sensor.temperature()
     humidity = sensor.humidity()
-    return (temp, humidity)
+    return (int(temp), int(humidity))
