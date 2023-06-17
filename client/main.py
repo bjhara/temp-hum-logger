@@ -9,13 +9,16 @@ import struct
 
 msg_buffer = bytearray(2)
 
+
 def read_config():
     with open("config.json") as config_file:
-        return json.load(config_file)   
+        return json.load(config_file)
+
 
 def publish(client, topic, temp, hum):
     struct.pack_into("BB", msg_buffer, 0, temp, hum)
     client.publish(topic, msg_buffer)
+
 
 config = read_config()
 dht = sensor.create(config["model"], config["dhtPin"])
