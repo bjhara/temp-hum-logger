@@ -191,3 +191,7 @@ pyrightconfig.json
 
 ### Ignore any firmware files in firmware/
 firmware/
+
+
+### config file for system
+config.json
