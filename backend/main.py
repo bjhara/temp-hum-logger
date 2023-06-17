@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 import database
 import mqtt_client
 
@@ -14,6 +15,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+app.mount("/ui", StaticFiles(directory="ui", html=True), name="ui")
 
 
 @app.get("/")
