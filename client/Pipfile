@@ -8,6 +8,7 @@ name = "pypi"
 [dev-packages]
 mpremote = "*"
 esptool = "*"
+black = "*"
 
 [requires]
 python_version = "3.11"
