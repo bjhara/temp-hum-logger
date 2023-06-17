@@ -1,4 +1,5 @@
 from machine import Pin
+from time import time
 
 
 def create(model, pin):
@@ -15,7 +16,8 @@ def create(model, pin):
 
 
 def measure(sensor):
+    timestamp = time()
     sensor.measure()
     temp = sensor.temperature()
     humidity = sensor.humidity()
-    return (int(temp), int(humidity))
+    return (timestamp, int(temp), int(humidity))

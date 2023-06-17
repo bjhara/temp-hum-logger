@@ -3,11 +3,12 @@ from time import sleep
 from umqtt.simple import MQTTClient
 import json
 import machine
+import ntptime
 import sensor
 import struct
 
 
-msg_buffer = bytearray(2)
+msg_buffer = bytearray(6)
 
 
 def read_config():
@@ -15,21 +16,28 @@ def read_config():
         return json.load(config_file)
 
 
-def publish(client, topic, temp, hum):
-    struct.pack_into("BB", msg_buffer, 0, temp, hum)
+def publish(client, topic, timestamp, temp, hum):
+    struct.pack_into("IBB", msg_buffer, 0, timestamp, temp, hum)
     client.publish(topic, msg_buffer)
 
 
-config = read_config()
-dht = sensor.create(config["model"], config["dhtPin"])
+def main():
+    ntptime.settime()
 
-client_id = hexlify(machine.unique_id())
-mqtt_client = MQTTClient(client_id, config["server"], keepalive=60)
-mqtt_client.connect()
+    config = read_config()
+    dht = sensor.create(config["model"], config["dhtPin"])
 
-while True:
-    temp, hum = sensor.measure(dht)
-    print("temp:", temp)
-    print("hum:", hum)
-    publish(mqtt_client, config["topic"], temp, hum)
-    sleep(60)
+    client_id = hexlify(machine.unique_id())
+    mqtt_client = MQTTClient(client_id, config["server"], keepalive=60)
+    mqtt_client.connect()
+
+    while True:
+        timestamp, temp, hum = sensor.measure(dht)
+        print("temp:", temp)
+        print("hum:", hum)
+        publish(mqtt_client, config["topic"], timestamp, temp, hum)
+        sleep(60)
+
+
+if __name__ == "__main__":
+    main()
