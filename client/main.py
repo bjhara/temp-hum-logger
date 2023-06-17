@@ -28,6 +28,8 @@ def main():
     dht = sensor.create(config["model"], config["dhtPin"])
 
     client_id = hexlify(machine.unique_id())
+    topic = config["topic"] + "/" + client_id.decode("UTF-8")
+
     mqtt_client = MQTTClient(client_id, config["server"], keepalive=60)
     mqtt_client.connect()
 
@@ -36,7 +38,7 @@ def main():
         print("time:", timestamp)
         print("temp:", temp)
         print("hum:", hum)
-        publish(mqtt_client, config["topic"], timestamp, temp, hum)
+        publish(mqtt_client, topic, timestamp, temp, hum)
         sleep(20)
 
 
