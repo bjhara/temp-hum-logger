@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 import database
 import mqtt_client
@@ -21,7 +22,7 @@ app.mount("/ui", StaticFiles(directory="ui", html=True), name="ui")
 
 @app.get("/")
 async def root():
-    return {"message": "Hello, world!"}
+    return RedirectResponse("/ui/")
 
 
 @app.get("/clients")
