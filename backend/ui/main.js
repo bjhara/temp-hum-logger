@@ -75,14 +75,24 @@ function createGraph(parent, temp, hum) {
     });
 }
 
+/**
+ * Split a single list of measurement data into two separate lists.
+ * 
+ * @param {{timestamp: number, temp: number, hum: number}[]} measurments - temperature and humidity in one list
+ * @returns {[{timestamp: number, temp: number}[], {timestamp: number, hum: number}[]]} temperature and humidity split into two lists
+ */
 function splitMeasurementData(measurments) {
     const temp = measurments.map(({timestamp, temp}) => ({ x: timestamp*1000, y: temp}))
     const hum = measurments.map(({timestamp, hum}) => ({ x: timestamp*1000, y: hum}))
     return [temp, hum]
 }
 
+/**
+ * Create temperature/humidity graphs for every client id in the database.
+ * Will put them all in the "charts" element.
+ * 
+ */
 async function setup() {
-    
     const parent = document.getElementById("charts")
     const chartResp = await fetch("/clients")
     const clientIds = await chartResp.json()
