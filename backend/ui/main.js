@@ -2,12 +2,20 @@
  * Create a graph from the given temp and humidity data.
  * 
  * @param {HTMLElement} parent 
+ * @param {string} name
  * @param {number[]} temp 
  * @param {number[]} humidity 
  */
-function createGraph(parent, temp, hum) {
+function createGraph(parent, name, temp, hum) {
+    const section = document.createElement("section")
+    const heading = document.createElement("h2")
     const canvas = document.createElement("canvas")
-    parent.append(canvas)
+
+    heading.innerText = name
+
+    section.append(heading)
+    section.append(canvas)
+    parent.append(section)
 
     new Chart(canvas, {
         type: 'line',
@@ -102,7 +110,7 @@ async function setup() {
         const measurements = await measurmentResponse.json()
 
         const [temp, hum] = splitMeasurementData(measurements)
-        createGraph(parent, temp, hum)
+        createGraph(parent, clientId, temp, hum)
     }
 }
 
