@@ -31,19 +31,8 @@ def wait_for_period(early=0):
         sleep(seconds_to_period)
 
 
-def main():
-    ntptime.settime()
-
-    config = read_config()
-    dht = sensor.create(config["model"], config["dhtPin"])
-
-    client_id = hexlify(machine.unique_id())
-    topic = config["topic"] + "/" + client_id.decode("UTF-8")
-
-    # wait until it is almost time to measure
-    wait_for_period(early=60)
-
-    mqtt_client = MQTTClient(client_id, config["server"], keepalive=60)
+def perform_measurement(client_id, server, topic, dht):
+    mqtt_client = MQTTClient(client_id, server, keepalive=60)
     mqtt_client.connect()
 
     # now when the MQTT client is connected, let's wait the final seconds
@@ -61,8 +50,32 @@ def main():
 
     sleep(10)
 
-    # Sleep for 13 minutes. To save power and have some slack
-    # to be able to connect to the network, mqtt etc. upon reset
+
+def main():
+    ntptime.settime()
+
+    config = read_config()
+
+    client_id = hexlify(machine.unique_id())
+    server = config["server"]
+    topic = config["topic"] + "/" + client_id.decode("UTF-8")
+    dht = sensor.create(config["model"], config["dhtPin"])
+
+    # wait until it is almost time to measure
+    wait_for_period(early=60)
+
+    try:
+        perform_measurement(client_id, server, topic, dht)
+    except Exception as ex:
+        # if there is an exception just log it and go to
+        # sleep and retry next period
+        print("unable to perform measurement", ex)
+
+    # Sleep for slightly shorter than the period. To save power and
+    # have some slack to be able to connect to the network, mqtt etc.
+    # upon reset
+
+    print("going into deep sleep")
 
     rtc = machine.RTC()
     rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
