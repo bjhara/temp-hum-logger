@@ -33,10 +33,18 @@ async def clients() -> object:
 
 @app.get("/clients/{client_id}")
 async def client_id(client_id: str) -> object:
+    def round_minute(timestamp: int) -> int:
+        seconds = timestamp % 60
+
+        if seconds <= 30:
+            return timestamp - seconds
+        else:
+            return timestamp + (60 - seconds)
+
     measurements = database.get_measurements(client_id)
     measurement_objects = [
         {
-            "timestamp": ts,
+            "timestamp": round_minute(ts),
             "temp": temp,
             "hum": hum,
         }
