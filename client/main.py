@@ -85,4 +85,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    while True:
+        try:
+            main()
+        except Exception as ex:
+            print("Exception in main", ex)
