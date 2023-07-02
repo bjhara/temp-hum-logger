@@ -1,0 +1,19 @@
+button {
+    border-width: 0px;
+    background-color: unset;
+    transition: color 150ms ease-in-out;
+}
+
+button:hover, button:focus {
+    color: green;
+}
+
+h2 {
+    margin-bottom: 0;
+}
+
+.editable-heading {
+    align-items: center;
+    display: flex;
+    gap: 0 0.5rem;
+}
