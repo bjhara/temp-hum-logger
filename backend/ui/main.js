@@ -133,6 +133,8 @@ function createGraph(parent, id, temp, hum) {
 
     parent.append(...elems)
 
+    const pointStyle = temp.length < 100 && hum.length < 100 ? 'circle' : false
+
     new Chart(canvas, {
         type: 'line',
         data: {
@@ -152,7 +154,7 @@ function createGraph(parent, id, temp, hum) {
         options: {
             datasets: {
                 line: {
-                    pointStyle: false,
+                    pointStyle,
                 },
             },
             scales: {
@@ -164,7 +166,7 @@ function createGraph(parent, id, temp, hum) {
                         displayFormats: {
                             second: "mm:ss",
                             minute: "HH:mm",
-                            hour: "HH:mm",
+                            hour: "MM-dd HH:mm",
                             day: "yyyy-MM-dd",
                             week: "yyyy-MM-dd",
                             month: "yyyy-MM-dd",
